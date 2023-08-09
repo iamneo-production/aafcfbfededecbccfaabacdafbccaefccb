@@ -1,44 +1,50 @@
 package ai.iamneo.testing.Testing_Selenium_TestNg;
 
-import org.testng.annotations.Test;
-import java.net.URL;
-
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
 import org.testng.annotations.BeforeTest;
-import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.testng.annotations.AfterTest;
 
 public class AppTest {
+    WebDriver driver;
 
-	ChromeOptions chromeOptions = new ChromeOptions();
-	WebDriver driver = null;
+    @BeforeTest
+    public void setUp() {
+        // Set the path to the ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
 
-	@BeforeTest
-	public void beforeTest() throws Exception {
-	//	System.setProperty("webdriver.chrome.driver", "/home/coder/project/workspace/Testing-with-Selenium-TestNg/chromedriver");
-		driver = new RemoteWebDriver(new URL("http://localhost:4444"), chromeOptions);
-	}
+        // Initialize ChromeDriver
+        driver = new ChromeDriver();
+    }
 
-	@Test
-	public void TestCase_1() throws InterruptedException {
-		driver.get("https://admin.pscollege841.exam.ly/");
-		Thread.sleep(5000);  
-		String title = driver.getTitle();
-		Assert.assertEquals(title, "PS College");
-	}
-	@Test
-	public void TestCase_2() throws InterruptedException {
-		driver.get("https://admin.pscollege841.exam.ly/");
-		Thread.sleep(5000);  
-		String title = driver.getTitle();
-		Assert.assertEquals(title, "PS College");
-	}
+    @Test
+    public void testLogin() {
+        // Navigate to Flipkart
+        driver.get("http://www.flipkart.com");
 
-	@AfterTest
-	public void afterTest() {
-		driver.quit();
-	}
+        // Enter Email/Phone and Password
+        driver.findElement(By.xpath("//input[@type='text']")).sendKeys("your_email_or_phone");
+        driver.findElement(By.xpath("//input[@type='password']")).sendKeys("your_password");
 
+        // Click Login button
+        driver.findElement(By.xpath("//button[text()='Login']")).click();
+        
+       
+
+        // Verify if the user is logged in
+        boolean isLoggedIn = driver.findElements(By.xpath("//div[contains(text(),'My Account')]")).size() > 0;
+        if (isLoggedIn) {
+            System.out.println("Login successful!");
+        } else {
+            System.out.println("Login failed!");
+        }
+    }
+
+    @AfterTest
+    public void tearDown() {
+        // Close the browser
+        driver.quit();
+    }
 }
